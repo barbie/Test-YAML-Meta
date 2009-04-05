@@ -1,5 +1,19 @@
 # Changes log for Test::YAML::Meta
 
+0.08	17/03/2008
+	- it helps when you fix all the versioning too!
+
+0.07	17/03/2008
+	- fixed licensing list (adding Artistic2). (Bernhard Schmalhofer)
+	- value for license is mandatory, but the actual value could be any
+          string. Therefore the license() function now returns 1 if the given
+	  value is a known license type, returns 2 if a value is given, or 0
+	  if no value is given.
+	- hashref returned of the parsed META.yml file, by both meta_spec_ok()
+	  and meta_yaml_ok(), in the event the user wishes to perform addition
+	  checks on the values of the hash keys. (Adam Kennedy)
+	- added t/05metaspec.t test file.
+
 0.06	05/11/2007
 	- fixed RT#29457: distribution_type is not mandatory in spec 1.2 (domm)
 
