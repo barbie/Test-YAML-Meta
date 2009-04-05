@@ -1,0 +1,5 @@
+# Changes log for Test::YAML::Meta
+
+0.01    27/02/2007
+        - Initial release.
+	- Devel::Cover = 91.7%
