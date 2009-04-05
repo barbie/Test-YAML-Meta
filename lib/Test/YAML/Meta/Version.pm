@@ -4,7 +4,7 @@ use warnings;
 use strict;
 
 use vars qw($VERSION);
-$VERSION = '0.04';
+$VERSION = '0.05';
 
 #----------------------------------------------------------------------------
 
@@ -648,7 +648,7 @@ sub _error {
     push @{$self->{errors}}, $mess;
 }
 
-q( Currently Listening To: Nine Inch Nails - "With Teeth" );
+q( Currently Listening To: The Nefilim - "Zoon" );
 
 __END__
 

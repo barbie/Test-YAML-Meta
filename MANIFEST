@@ -16,7 +16,6 @@ t/03metaversion.t
 t/04metatester.t
 t/90podtest.t
 t/91podcover.t
-t/93metavalid.t
 t/94metatest.t
 t/samples/00-META.yml
 t/samples/01-META.yml

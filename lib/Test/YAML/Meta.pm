@@ -4,7 +4,7 @@ use warnings;
 use strict;
 
 use vars qw($VERSION);
-$VERSION = '0.04';
+$VERSION = '0.05';
 
 #----------------------------------------------------------------------------
 
@@ -138,7 +138,7 @@ sub meta_spec_ok {
     }
 }
 
-q( Currently Listening To: KMDFM - "Hau Ruck" );
+q( Currently Listening To: Curve - "Gift" );
 
 __END__
 

@@ -1,5 +1,10 @@
 # Changes log for Test::YAML::Meta
 
+0.05	02/11/2007
+	- a curious error report fails validating META.yml the first time, but
+	  is okay the second time. As such I'm removing the 93metavalid.t as 
+	  the test is redundant now.
+
 0.04	15/05/2007
 	- provided better error reporting (spec chain and validating version)
 	- added a new test file, supplied by Jochen Stenzel, which highlights
