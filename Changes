@@ -1,5 +1,16 @@
 # Changes log for Test::YAML::Meta
 
+0.04	15/05/2007
+	- provided better error reporting (spec chain and validating version)
+	- added a new test file, supplied by Jochen Stenzel, which highlights
+	  an error in the way the author line was created.
+	- bumped the Test::More version required, due to a bugfix in 
+	  Test::Builder:Tester.
+	- provided a cleaner way to report undef values as errors
+	- added lots more tests for edge cases
+	- finally sorted the Test::Builder::Tester tests in 04metatester.t
+	- Devel::Cover = 95.6%
+
 0.03    27/02/2007
 	- POD & comment updates
 	- removed 92distribution.t test as it can't detect that YAML::Syck is 

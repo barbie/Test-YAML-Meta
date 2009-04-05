@@ -4,7 +4,7 @@ use warnings;
 use strict;
 
 use vars qw($VERSION);
-$VERSION = '0.03';
+$VERSION = '0.04';
 
 #----------------------------------------------------------------------------
 
@@ -312,17 +312,20 @@ sub check_map {
     my ($self,$spec,$data) = @_;
 
     if(ref($data) ne 'HASH') {
-        push @{$self->{errors}}, "Expected a map structure";
+        $self->_error( "Expected a map structure from YAML string or file" );
         return;
     }
 
     for my $key (keys %$spec) {
         next    unless($spec->{$key}->{mandatory});
         next    if(defined $data->{$key});
-        push @{$self->{errors}}, "Missing mandatory field, '$key'";
+        push @{$self->{stack}}, $key;
+        $self->_error( "Missing mandatory field, '$key'" );
+        pop @{$self->{stack}};
     }
 
     for my $key (keys %$data) {
+        push @{$self->{stack}}, $key;
         if($spec->{$key}) {
             if($spec->{$key}{value}) {
                 $spec->{$key}{value}->($self,$key,$data->{$key});
@@ -344,8 +347,9 @@ sub check_map {
 
 
         } else {
-            push @{$self->{errors}}, "Unknown key, '$key', found in map structure";
+            $self->_error( "Unknown key, '$key', found in map structure" );
         }
+        pop @{$self->{stack}};
     }
 }
 
@@ -353,17 +357,18 @@ sub check_list {
     my ($self,$spec,$data) = @_;
 
     if(ref($data) ne 'ARRAY') {
-        push @{$self->{errors}}, "Expected a list structure";
+        $self->_error( "Expected a list structure" );
         return;
     }
 
     if(defined $spec->{mandatory}) {
         if(!defined $data->[0]) {
-            push @{$self->{errors}}, "Missing entries from mandatory list";
+            $self->_error( "Missing entries from mandatory list" );
         }
     }
 
     for my $value (@$data) {
+        push @{$self->{stack}}, $value;
         if(defined $spec->{value}) {
             $spec->{value}->($self,'list',$value);
         } elsif(defined $spec->{'map'}) {
@@ -375,8 +380,9 @@ sub check_list {
             $self->check_map($spec,$value);
 
         } else {
-            push @{$self->{errors}}, "Unknown value type, '$value', found in list structure";
+            $self->_error( "Unknown value type, '$value', found in list structure" );
         }
+        pop @{$self->{stack}};
     }
 }
 
@@ -455,10 +461,11 @@ sub header {
     if(defined $value) {
         return 1    if($value && $value =~ /^--- #YAML:1.0/);
     }
-    push @{$self->{errors}}, "file does not have a valid YAML header.";
+    $self->_error( "file does not have a valid YAML header." );
     return 0;
 }
 
+#my $protocol = qr¬(?:http|https|ftp|afs|news|nntp|mid|cid|mailto|wais|prospero|telnet|gopher)¬;
 my $protocol = qr¬(?:ftp|http|https)¬;
 my $badproto = qr¬(\w+)://¬;
 my $proto    = qr¬$protocol://(?:[\w]+:\w+@)?¬;
@@ -477,17 +484,17 @@ sub url {
     my ($self,$key,$value) = @_;
     if(defined $value) {
         if($value && $value =~ /^$badproto$/) {
-            push @{$self->{errors}}, "Domain name required for a valid URL.";
+            $self->_error( "Domain name required for a valid URL." );
             return 0;
         }
         if($value && $value =~ /^$badproto/ && $1 !~ $protocol) {
-            push @{$self->{errors}}, "Unknown protocol used in URL.";
+            $self->_error( "Unknown protocol used in URL." );
             return 0;
         }
         return 1    if($value && $value =~ /^$urlregex$/);
     }
     $value ||= '';
-    push @{$self->{errors}}, "'$value' for '$key' is not a valid URL.";
+    $self->_error( "'$value' for '$key' is not a valid URL." );
     return 0;
 }
 
@@ -504,11 +511,11 @@ sub urlspec {
     if(defined $value) {
         return 1    if($value && $known_specs{$self->{spec}} eq $value);
         if($value && $known_urls{$value}) {
-            push @{$self->{errors}}, 'META.yml specification URL does not match version';
+            $self->_error( 'META.yml specification URL does not match version' );
             return 0;
         }
     }
-    push @{$self->{errors}}, 'Unknown META.yml specification';
+    $self->_error( 'Unknown META.yml specification' );
     return 0;
 }
 
@@ -517,7 +524,7 @@ sub string {
     if(defined $value) {
         return 1    if($value || $value =~ /^0$/);
     }
-    push @{$self->{errors}}, "value is an undefined string";
+    $self->_error( "value is an undefined string" );
     return 0;
 }
 
@@ -525,43 +532,49 @@ sub string_or_undef {
     my ($self,$key,$value) = @_;
     return 1    unless(defined $value);
     return 1    if($value || $value =~ /^0$/);
-    push @{$self->{errors}}, "No string defined for '$key'";
+    $self->_error( "No string defined for '$key'" );
     return 0;
 }
 
 sub file {
     my ($self,$key,$value) = @_;
     return 1    if(defined $value);
-    push @{$self->{errors}}, "No file defined for '$key'";
+    $self->_error( "No file defined for '$key'" );
     return 0;
 }
 
 sub exversion {
     my ($self,$key,$value) = @_;
-    return 0    unless($value || $value =~ /0/);
-    my $pass = 1;
-    for(split(",",$value)) { $self->version($key,$_) or ($pass = 0); }
-    return $pass;
+    if(defined $value && ($value || $value =~ /0/)) {
+        my $pass = 1;
+        for(split(",",$value)) { $self->version($key,$_) or ($pass = 0); }
+        return $pass;
+    }
+    $value = '<undef>'  unless(defined $value);
+    $self->_error( "'$value' for '$key' is not a valid version." );
+    return 0;
 }
 
 sub version {
     my ($self,$key,$value) = @_;
     if(defined $value) {
         return 0    unless($value || $value =~ /0/);
-        return 1    if(defined $value && $value =~ /^\s*((<|<=|>=|>|!=|==)\s*)?\d+((\.\d+((_|\.)\d+)?)?)/);
+        return 1    if($value =~ /^\s*((<|<=|>=|>|!=|==)\s*)?\d+((\.\d+((_|\.)\d+)?)?)/);
+    } else {
+        $value = '<undef>';
     }
-    $value ||= '';
-    push @{$self->{errors}}, "'$value' for '$key' is not a valid version.";
+    $self->_error( "'$value' for '$key' is not a valid version." );
     return 0;
 }
 
 sub boolean {
     my ($self,$key,$value) = @_;
     if(defined $value) {
-        return 1    if(defined $value && $value =~ /^(0|1|true|false)$/);
+        return 1    if($value =~ /^(0|1|true|false)$/);
+    } else {
+        $value = '<undef>';
     }
-    $value ||= '';
-    push @{$self->{errors}}, "'$value' for '$key' is not a boolean value.";
+    $self->_error( "'$value' for '$key' is not a boolean value." );
     return 0;
 }
 
@@ -585,9 +598,10 @@ sub license {
     my ($self,$key,$value) = @_;
     if(defined $value) {
         return 1    if($value && exists $licenses{$value});
+    } else {
+        $value = '<undef>';
     }
-    $value ||= '';
-    push @{$self->{errors}}, "License '$value' is unknown";
+    $self->_error( "License '$value' is unknown" );
     return 0;
 }
 
@@ -595,9 +609,10 @@ sub resource {
     my ($self,$key) = @_;
     if(defined $key) {
         return 1    if($key && $key =~ /^([A-Z][a-z]+)+$/);
+    } else {
+        $key = '<undef>';
     }
-    $key ||= '';
-    push @{$self->{errors}}, "Resource '$key' must be in CamelCase.";
+    $self->_error( "Resource '$key' must be in CamelCase." );
     return 0;
 }
 
@@ -605,9 +620,10 @@ sub word {
     my ($self,$key) = @_;
     if(defined $key) {
         return 1    if($key && $key =~ /^([-_a-z]+)$/);
+    } else {
+        $key = '<undef>';
     }
-    $key ||= '';
-    push @{$self->{errors}}, "Key '$key' is not a legal keyword.";
+    $self->_error( "Key '$key' is not a legal keyword." );
     return 0;
 }
 
@@ -615,10 +631,21 @@ sub module {
     my ($self,$key) = @_;
     if(defined $key) {
         return 1    if($key && $key =~ /^[A-Za-z0-9_]+(::[A-Za-z0-9_]+)*$/);
+    } else {
+        $key = '<undef>';
     }
-    $key ||= '';
-    push @{$self->{errors}}, "Key '$key' is not a legal module name.";
+    $self->_error( "Key '$key' is not a legal module name." );
     return 0;
+}
+
+sub _error {
+    my $self = shift;
+    my $mess = shift;
+
+    $mess .= ' ('.join(' -> ',@{$self->{stack}}).')'  if($self->{stack});
+    $mess .= " [Validation: $self->{spec}]";
+
+    push @{$self->{errors}}, $mess;
 }
 
 q( Currently Listening To: Nine Inch Nails - "With Teeth" );
@@ -655,7 +682,6 @@ for Miss Barbell Productions, L<http://www.missbarbell.co.uk>
 =head1 COPYRIGHT AND LICENSE
 
   Copyright (C) 2007 Barbie for Miss Barbell Productions
-  All Rights Reserved.
 
   This module is free software; you can redistribute it and/or 
   modify it under the same terms as Perl itself.

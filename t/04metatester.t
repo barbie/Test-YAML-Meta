@@ -2,7 +2,7 @@
 use strict;
 
 use Test::YAML::Meta;
-use Test::Builder::Tester tests => 5;
+use Test::Builder::Tester tests => 6;
 
 my $testfile = 't/samples/00-META.yml';
 
@@ -11,14 +11,12 @@ test_out('ok 2 - t/samples/00-META.yml meets the designated specification (1.3)'
 meta_spec_ok($testfile,'1.3');
 test_test("$testfile with version 1.3");
 
-# this test is commented out until I can figure out how to test failures!
-
-#test_out('ok 1 - t/samples/00-META.yml contains valid YAML');
-#test_out('not ok 2 - t/samples/00-META.yml meets the designated specification (1.2)');
-#test_fail(2);
-#test_err('ERR: META.yml specification URL does not match version');
-#meta_spec_ok($testfile,'1.2');
-#test_test("$testfile with version 1.2");
+test_out('ok 1 - t/samples/00-META.yml contains valid YAML');
+test_out('not ok 2 - t/samples/00-META.yml meets the designated specification (1.2)');
+test_fail(2);
+test_err('#   ERR: META.yml specification URL does not match version (meta-spec -> url) [Validation: 1.2]');
+meta_spec_ok($testfile,'1.2');
+test_test("$testfile with version 1.2");
 
 test_out('ok 1 - t/samples/00-META.yml contains valid YAML');
 test_out('ok 2 - t/samples/00-META.yml meets the designated specification (1.1)');

@@ -5,7 +5,7 @@ WriteMakefile(
     'PREREQ_PM'		=> {
 		Test::Builder       => 0,
 		Test::YAML::Valid	=> 0.03,
-		Test::More	        => 0.47,	# for testing
+		Test::More	        => 0.70,	# for testing
 	},
 	NO_META			=> 1,
 
