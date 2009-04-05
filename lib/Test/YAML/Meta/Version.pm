@@ -4,7 +4,7 @@ use warnings;
 use strict;
 
 use vars qw($VERSION);
-$VERSION = '0.06';
+$VERSION = '0.07';
 
 #----------------------------------------------------------------------------
 
@@ -18,9 +18,9 @@ Test::YAML::Meta::Version - Validation of META.yml specification elements.
 
 =head1 DESCRIPTION
 
-This module was written to ensure that a META.yml file, provided with a 
-standard distribution uploaded to CPAN, meets the specifications that are 
-slowly being introduced to module uploads, via the use of 
+This module was written to ensure that a META.yml file, provided with a
+standard distribution uploaded to CPAN, meets the specifications that are
+slowly being introduced to module uploads, via the use of
 L<ExtUtils::MakeMaker>, L<Module::Build> and L<Module::Install>.
 
 This module is meant to be used together with L<Test::YAML::Meta>, however
@@ -61,27 +61,28 @@ my $no_index_1_1 = {
 
 my %definitions = (
 '1.3' => {
-#  'header'          => { mandatory => 1, value => \&header },
-  'meta-spec'       => { mandatory => 1, 'map' => { version => { mandatory => 1, value => \&version}, 
-                                                    url     => { mandatory => 1, value => \&urlspec } } },
+#  'header'              => { mandatory => 1, value => \&header },
+  'meta-spec'           => { mandatory => 1, 'map' => { version => { mandatory => 1, value => \&version},
+                                                        url     => { mandatory => 1, value => \&urlspec } } },
 
-  'name'            => { mandatory => 1, value => \&string  },
-  'version'         => { mandatory => 1, value => \&version },
-  'license'         => { mandatory => 1, value => \&license },
-  'generated_by'    => { mandatory => 1, value => \&string  },
-  'author'          => { mandatory => 1, list  => { value => \&string } },
+  'name'                => { mandatory => 1, value => \&string  },
+  'version'             => { mandatory => 1, value => \&version },
+  'abstract'            => { mandatory => 1, value => \&string  },
+  'author'              => { mandatory => 1, list  => { value => \&string } },
+  'license'             => { mandatory => 1, value => \&license },
+  'generated_by'        => { mandatory => 1, value => \&string  },
 
-  'abstract'        => { value => \&string  },
-  'dynamic_config'  => { value => \&boolean },
+  'distribution_type'   => { value => \&string  },
+  'dynamic_config'      => { value => \&boolean },
 
-  'requires'        => $module_map1,
-  'recommends'      => $module_map1,
-  'build_requires'  => $module_map1,
-  'conflicts'       => $module_map2,
+  'requires'            => $module_map1,
+  'recommends'          => $module_map1,
+  'build_requires'      => $module_map1,
+  'conflicts'           => $module_map2,
 
   'optional_features'   => {
-    list        => { 
-        ':key'  => { name => \&word, 
+    list        => {
+        ':key'  => { name => \&word,
             'map'   => { description        => { value => \&string },
                          requires_packages  => { value => \&string },
                          requires_os        => { value => \&string },
@@ -97,7 +98,7 @@ my %definitions = (
 
   'provides'    => {
     'map'       => { ':key' => { name  => \&module,
-                                 'map' => { file    => { mandatory => 1, value => \&file }, 
+                                 'map' => { file    => { mandatory => 1, value => \&file },
                                             version => { value => \&version } } } }
   },
 
@@ -117,7 +118,7 @@ my %definitions = (
 
   # additional user defined key/value pairs
   # note we can only validate the key name, as the structure is user defined
-  ':key'        => { name => \&word },  
+  ':key'        => { name => \&word },
 },
 
 # v1.2 is misleading, it seems to assume that a number of fields where created
@@ -126,7 +127,7 @@ my %definitions = (
 # v1.2 was originally slated as v1.1. But I could be wrong ;)
 '1.2' => {
 #  'header'              => { mandatory => 1, value => \&header },
-  'meta-spec'           => { mandatory => 1, 'map' => { version => { mandatory => 1, value => \&version}, 
+  'meta-spec'           => { mandatory => 1, 'map' => { version => { mandatory => 1, value => \&version},
                                                         url     => { mandatory => 1, value => \&urlspec } } },
 
   'name'                => { mandatory => 1, value => \&string  },
@@ -150,8 +151,8 @@ my %definitions = (
   'conflicts'           => $module_map2,
 
   'provides'    => {
-    'map'       => { ':key' => { name  => \&module, 
-                                 'map' => { file    => { mandatory => 1, value => \&file }, 
+    'map'       => { ':key' => { name  => \&module,
+                                 'map' => { file    => { mandatory => 1, value => \&file },
                                             version => { value => \&version } } } }
   },
 
@@ -166,7 +167,7 @@ my %definitions = (
 
   # additional user defined key/value pairs
   # note we can only validate the key name, as the structure is user defined
-  ':key'        => { name => \&word },  
+  ':key'        => { name => \&word },
 },
 
 # note that the 1.1 spec doesn't specify optional or mandatory fields, what
@@ -191,12 +192,12 @@ my %definitions = (
 
   # additional user defined key/value pairs
   # note we can only validate the key name, as the structure is user defined
-  ':key'        => { name => \&word },  
+  ':key'        => { name => \&word },
 },
 
 # note that the 1.0 spec doesn't specify optional or mandatory fields, what
 # appears below is assumed from later specifications.
-'1.0' => {      
+'1.0' => {
 #  'header'              => { mandatory => 1, value => \&header },
   'name'                => { mandatory => 1, value => \&string  },
   'version'             => { mandatory => 1, value => \&version },
@@ -213,7 +214,7 @@ my %definitions = (
 
   # additional user defined key/value pairs
   # note we can only validate the key name, as the structure is user defined
-  ':key'        => { name => \&word },  
+  ':key'        => { name => \&word },
 },
 );
 
@@ -227,11 +228,11 @@ my %definitions = (
 
 =item * new( yaml => $yaml [, spec => $version] )
 
-The constructor must be passed a valid YAML data structure. 
+The constructor must be passed a valid YAML data structure.
 
 Optionally you may also provide a specification version. This version is then
-use to ensure that the given YAML data structure meets the respective 
-specification definition. If no version is provided the module will attempt to 
+use to ensure that the given YAML data structure meets the respective
+specification definition. If no version is provided the module will attempt to
 deduce the appropriate specification version from the data structure itself.
 
 =back
@@ -259,7 +260,7 @@ sub new {
 
 =item * parse()
 
-Using the YAML data structure provided with the constructure, attempts to 
+Using the YAML data structure provided with the constructure, attempts to
 parse and validate according to the appropriate specification definition.
 
 Returns 1 if any errors found, otherwise returns 0.
@@ -296,12 +297,12 @@ sub errors {
 
 =item * check_map($spec,$data)
 
-Checks whether a map (or hash) part of the YAML data structure conforms to the 
+Checks whether a map (or hash) part of the YAML data structure conforms to the
 appropriate specification definition.
 
 =item * check_list($spec,$data)
 
-Checks whether a list (or array) part of the YAML data structure conforms to 
+Checks whether a list (or array) part of the YAML data structure conforms to
 the appropriate specification definition.
 
 =back
@@ -406,7 +407,7 @@ Validates that the URL to a META.yml specification is a known one.
 
 =item * string_or_undef($self,$key,$value)
 
-Validates that the value is either a string or an undef value. Bit of a 
+Validates that the value is either a string or an undef value. Bit of a
 catchall function for parts of the data structure that are completely user
 defined.
 
@@ -430,16 +431,17 @@ are both valid.
 
 =item * boolean($self,$key,$value)
 
-Validates for a boolean value. Currently these values are '1', '0', 'true', 
+Validates for a boolean value. Currently these values are '1', '0', 'true',
 'false', however the latter 2 may be removed.
 
 =item * license($self,$key,$value)
 
-Validates that the given value represents an known license type.
+Validates that a value is given for the license. Returns 1 if an known license
+type, or 2 if a value is given but the license type is not a recommended one.
 
 =item * resource($self,$key,$value)
 
-Validates that the given key is in CamelCase, to indicate a user defined 
+Validates that the given key is in CamelCase, to indicate a user defined
 keyword.
 
 =item * word($self,$key,$value)
@@ -449,7 +451,7 @@ i.e. any in the character class [-_a-z].
 
 =item * module($self,$key,$value)
 
-Validates that a given key is in an acceptable module name format, e.g. 
+Validates that a given key is in an acceptable module name format, e.g.
 'Test::YAML::Meta::Version'.
 
 =back
@@ -579,25 +581,28 @@ sub boolean {
 }
 
 my %licenses = (
-    perl         => 'http://dev.perl.org/licenses/',
-    gpl          => 'http://www.opensource.org/licenses/gpl-license.php',
-    apache       => 'http://apache.org/licenses/LICENSE-2.0',
-    artistic     => 'http://opensource.org/licenses/artistic-license.php',
-    lgpl         => 'http://opensource.org/licenses/artistic-license.php',
-    bsd          => 'http://www.opensource.org/licenses/bsd-license.php',
-    gpl          => 'http://www.opensource.org/licenses/gpl-license.php',
-    mit          => 'http://opensource.org/licenses/mit-license.php',
-    mozilla      => 'http://opensource.org/licenses/mozilla1.1.php',
-    open_source  => undef,
-    unrestricted => undef,
-    restrictive  => undef,
-    unknown      => undef,
+    'perl'         => 'http://dev.perl.org/licenses/',
+    'gpl'          => 'http://www.opensource.org/licenses/gpl-license.php',
+    'apache'       => 'http://apache.org/licenses/LICENSE-2.0',
+    'artistic'     => 'http://opensource.org/licenses/artistic-license.php',
+    'artistic2'    => 'http://opensource.org/licenses/artistic-license-2.0.php',
+    'artistic-2.0' => 'http://opensource.org/licenses/artistic-license-2.0.php',
+    'lgpl'         => 'http://www.opensource.org/licenses/lgpl-license.phpt',
+    'bsd'          => 'http://www.opensource.org/licenses/bsd-license.php',
+    'gpl'          => 'http://www.opensource.org/licenses/gpl-license.php',
+    'mit'          => 'http://opensource.org/licenses/mit-license.php',
+    'mozilla'      => 'http://opensource.org/licenses/mozilla1.1.php',
+    'open_source'  => undef,
+    'unrestricted' => undef,
+    'restrictive'  => undef,
+    'unknown'      => undef,
 );
 
 sub license {
     my ($self,$key,$value) = @_;
     if(defined $value) {
         return 1    if($value && exists $licenses{$value});
+        return 2    if($value);
     } else {
         $value = '<undef>';
     }
@@ -648,7 +653,7 @@ sub _error {
     push @{$self->{errors}}, $mess;
 }
 
-q( Currently Listening To: The Nefilim - "Zoon" );
+q( Currently Listening To: Joy Division - "Digital" from 'Unknown Pleasures');
 
 __END__
 
@@ -659,9 +664,9 @@ __END__
 There are no known bugs at the time of this release. However, if you spot a
 bug or are experiencing difficulties that are not explained within the POD
 documentation, please send an email to barbie@cpan.org or submit a bug to the
-RT system (http://rt.cpan.org/Public/Dist/Display.html?Name=Test-YAML-Meta). 
-However, it would help greatly if you are able to pinpoint problems or even 
-supply a patch. 
+RT system (http://rt.cpan.org/Public/Dist/Display.html?Name=Test-YAML-Meta).
+However, it would help greatly if you are able to pinpoint problems or even
+supply a patch.
 
 Fixes are dependant upon their severity and my availablity. Should a fix not
 be forthcoming, please feel free to (politely) remind me.
@@ -683,7 +688,7 @@ for Miss Barbell Productions, L<http://www.missbarbell.co.uk>
 
   Copyright (C) 2007 Barbie for Miss Barbell Productions
 
-  This module is free software; you can redistribute it and/or 
+  This module is free software; you can redistribute it and/or
   modify it under the same terms as Perl itself.
 
 =cut

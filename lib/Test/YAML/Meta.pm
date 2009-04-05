@@ -4,7 +4,7 @@ use warnings;
 use strict;
 
 use vars qw($VERSION);
-$VERSION = '0.06';
+$VERSION = '0.07';
 
 #----------------------------------------------------------------------------
 
@@ -14,7 +14,7 @@ Test::YAML::Meta - Validation of the META.yml file in a distribution.
 
 =head1 SYNOPSIS
 
-There are two forms this module can be used. 
+There are two forms this module can be used.
 
 The first is a standalone test of your distribution's META.yml file:
 
@@ -23,7 +23,7 @@ The first is a standalone test of your distribution's META.yml file:
   plan skip_all => "Test::YAML::Meta required for testing META.yml" if $@;
   meta_yaml_ok();
 
-Note that you may provide an optional label/comment/message/etc to the 
+Note that you may provide an optional label/comment/message/etc to the
 function, or one will be created automatically.
 
 The second form allows you to test other META.yml files, or specify a specific
@@ -33,14 +33,14 @@ version you wish to test against:
   use Test::YAML::Meta;
 
   # specify a file and specification version
-  meta_spec_ok('META.yml','1.3',$msg);       
+  meta_spec_ok('META.yml','1.3',$msg);
 
   # specify the specification version to validate the local META.yml
-  meta_spec_ok(undef,'1.3',$msg);       
+  meta_spec_ok(undef,'1.3',$msg);
 
-  # specify a file, where the specification version is deduced 
+  # specify a file, where the specification version is deduced
   # from the file itself
-  meta_spec_ok('META.yml',undef,$msg);       
+  meta_spec_ok('META.yml',undef,$msg);
 
 Note that this form requires you to specify the number of tests you will be
 running in your test script. Also note that each 'meta_spec_ok' is actually 2
@@ -48,8 +48,8 @@ tests under the hood.
 
 =head1 DESCRIPTION
 
-This module was written to ensure that a META.yml file, provided with a 
-standard distribution uploaded to CPAN, meets the specifications that slowly 
+This module was written to ensure that a META.yml file, provided with a
+standard distribution uploaded to CPAN, meets the specifications that slowly
 being introduced to module uploads, via the use of L<ExtUtils::MakeMaker>,
 L<Module::Build> and L<Module::Install>.
 
@@ -100,12 +100,12 @@ Basic META.yml wrapper around meta_spec_ok.
 
 sub meta_yaml_ok {
     $Test->plan( tests => 2 );
-    meta_spec_ok(undef,undef,@_);
+    return meta_spec_ok(undef,undef,@_);
 }
 
 =item * meta_spec_ok($file, $version [,$msg])
 
-Validates the named file against the given specification version. Both $file 
+Validates the named file against the given specification version. Both $file
 and $version can be undefined.
 
 =back
@@ -133,12 +133,15 @@ sub meta_spec_ok {
         } else {
             $Test->ok(1,$msg);
         }
+
+        return $yaml;
+
     } else {
         print STDERR "\n#Failed\n";
     }
 }
 
-q( Currently Listening To: Curve - "Gift" );
+q( Currently Listening To: Blondie - "Screaming Skin" from 'No Exit');
 
 __END__
 
@@ -149,9 +152,9 @@ __END__
 There are no known bugs at the time of this release. However, if you spot a
 bug or are experiencing difficulties that are not explained within the POD
 documentation, please send an email to barbie@cpan.org or submit a bug to the
-RT system (http://rt.cpan.org/Public/Dist/Display.html?Name=Test-YAML-Meta). 
-However, it would help greatly if you are able to pinpoint problems or even 
-supply a patch. 
+RT system (http://rt.cpan.org/Public/Dist/Display.html?Name=Test-YAML-Meta).
+However, it would help greatly if you are able to pinpoint problems or even
+supply a patch.
 
 Fixes are dependant upon their severity and my availablity. Should a fix not
 be forthcoming, please feel free to (politely) remind me.
@@ -177,7 +180,7 @@ for Miss Barbell Productions, L<http://www.missbarbell.co.uk>
 
   Copyright (C) 2007 Barbie for Miss Barbell Productions
 
-  This module is free software; you can redistribute it and/or 
+  This module is free software; you can redistribute it and/or
   modify it under the same terms as Perl itself.
 
 =cut
