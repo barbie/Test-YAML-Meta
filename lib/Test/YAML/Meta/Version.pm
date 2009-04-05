@@ -4,7 +4,7 @@ use warnings;
 use strict;
 
 use vars qw($VERSION);
-$VERSION = '0.10';
+$VERSION = '0.11';
 
 #----------------------------------------------------------------------------
 
@@ -38,6 +38,15 @@ Validation of META.yml specification elements.
 #Specification Definitions													#
 #############################################################################
 
+my %known_specs = (
+    '1.4' => 'http://module-build.sourceforge.net/META-spec-v1.4.html',
+    '1.3' => 'http://module-build.sourceforge.net/META-spec-v1.3.html',
+    '1.2' => 'http://module-build.sourceforge.net/META-spec-v1.2.html',
+    '1.1' => 'http://module-build.sourceforge.net/META-spec-v1.1.html',
+    '1.0' => 'http://module-build.sourceforge.net/META-spec-v1.0.html'
+);
+my %known_urls = map {$known_specs{$_} => $_} keys %known_specs;
+
 my $module_map1 = { 'map' => { ':key' => { name => \&module, value => \&exversion } } };
 my $module_map2 = { 'map' => { ':key' => { name => \&module, value => \&version   } } };
 my $no_index_1_3 = {
@@ -60,6 +69,68 @@ my $no_index_1_1 = {
 };
 
 my %definitions = (
+'1.4' => {
+#  'header'              => { mandatory => 1, value => \&header },
+  'meta-spec'           => { mandatory => 1, 'map' => { version => { mandatory => 1, value => \&version},
+                                                        url     => { mandatory => 1, value => \&urlspec } } },
+
+  'name'                => { mandatory => 1, value => \&string  },
+  'version'             => { mandatory => 1, value => \&version },
+  'abstract'            => { mandatory => 1, value => \&string  },
+  'author'              => { mandatory => 1, list  => { value => \&string } },
+  'license'             => { mandatory => 1, value => \&license },
+  'generated_by'        => { mandatory => 1, value => \&string  },
+
+  'distribution_type'   => { value => \&string  },
+  'dynamic_config'      => { value => \&boolean },
+
+  'requires'            => $module_map1,
+  'recommends'          => $module_map1,
+  'build_requires'      => $module_map1,
+  'configure_requires'  => $module_map1,
+  'conflicts'           => $module_map2,
+
+  'optional_features'   => {
+    list        => {
+        ':key'  => { name => \&word,
+            'map'   => { description        => { value => \&string },
+                         requires_packages  => { value => \&string },
+                         requires_os        => { value => \&string },
+                         excludes_os        => { value => \&string },
+                         requires           => $module_map1,
+                         recommends         => $module_map1,
+                         build_requires     => $module_map1,
+                         conflicts          => $module_map2,
+            }
+        }
+     }
+  },
+
+  'provides'    => {
+    'map'       => { ':key' => { name  => \&module,
+                                 'map' => { file    => { mandatory => 1, value => \&file },
+                                            version => { value => \&version } } } }
+  },
+
+  'no_index'    => $no_index_1_3,
+  'private'     => $no_index_1_3,
+
+  'keywords'    => { list => { value => \&string } },
+
+  'resources'   => {
+    'map'       => { license    => { value => \&url },
+                     homepage   => { value => \&url },
+                     bugtracker => { value => \&url },
+                     repository => { value => \&url },
+                     ':key'     => { value => \&string, name => \&resource },
+    }
+  },
+
+  # additional user defined key/value pairs
+  # note we can only validate the key name, as the structure is user defined
+  ':key'        => { name => \&word },
+},
+
 '1.3' => {
 #  'header'              => { mandatory => 1, value => \&header },
   'meta-spec'           => { mandatory => 1, 'map' => { version => { mandatory => 1, value => \&version},
@@ -312,6 +383,11 @@ the appropriate specification definition.
 sub check_map {
     my ($self,$spec,$data) = @_;
 
+    if(ref($spec) ne 'HASH') {
+        $self->_error( "Unknown META.yml specification, cannot validate." );
+        return;
+    }
+
     if(ref($data) ne 'HASH') {
         $self->_error( "Expected a map structure from YAML string or file" );
         return;
@@ -499,14 +575,6 @@ sub url {
     $self->_error( "'$value' for '$key' is not a valid URL." );
     return 0;
 }
-
-my %known_specs = (
-    '1.3' => 'http://module-build.sourceforge.net/META-spec-v1.3.html',
-    '1.2' => 'http://module-build.sourceforge.net/META-spec-v1.2.html',
-    '1.1' => 'http://module-build.sourceforge.net/META-spec-v1.1.html',
-    '1.0' => 'http://module-build.sourceforge.net/META-spec-v1.0.html'
-);
-my %known_urls = map {$known_specs{$_} => $_} keys %known_specs;
 
 sub urlspec {
     my ($self,$key,$value) = @_;
