@@ -1,3 +1,4 @@
+--- #YAML:1.0
 name:                   Test-YAML-Meta
 version:                0.01
 abstract:               A test module to validate a META.yml file.
@@ -25,6 +26,9 @@ provides:
     version:  0.01
   Test::YAML::Meta::Version:
     file:     lib/Test/YAML/Meta/Version.pm
+    version:  0.01
+  32Test::_YAML24::MetaVersion:
+    file:     lib/32Test/_YAML24/MetaVersion.pm
     version:  0.01
 no_index:
   directory:

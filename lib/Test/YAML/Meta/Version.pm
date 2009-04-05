@@ -4,7 +4,7 @@ use warnings;
 use strict;
 
 use vars qw($VERSION);
-$VERSION = '0.01';
+$VERSION = '0.02';
 
 #----------------------------------------------------------------------------
 
@@ -655,7 +655,7 @@ sub word {
 sub module {
     my ($self,$key) = @_;
     if(defined $key) {
-        return 1    if($key && $key =~ /^(([A-Z][A-Za-z]+)+)(::([A-Z][A-Za-z]+)+)*$/);
+        return 1    if($key && $key =~ /^[A-Za-z0-9_]+(::[A-Za-z0-9_]+)*$/);
     }
     $key ||= '';
     push @{$self->{errors}}, "Key '$key' is not a legal module name.";
