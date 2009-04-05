@@ -1,5 +1,10 @@
 # Changes log for Test::YAML::Meta
 
+0.09    28/03/2008
+	- purely a cosmetic release to render the Makefile.PL time issues, that
+	  have generated bogus FAIL reports in previous releases, null
+	  and void.
+
 0.08	17/03/2008
 	- it helps when you fix all the versioning too!
 
