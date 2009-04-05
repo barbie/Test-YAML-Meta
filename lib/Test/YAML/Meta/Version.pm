@@ -4,7 +4,7 @@ use warnings;
 use strict;
 
 use vars qw($VERSION);
-$VERSION = '0.02';
+$VERSION = '0.03';
 
 #----------------------------------------------------------------------------
 
@@ -81,16 +81,18 @@ my %definitions = (
 
   'optional_features'   => {
     list        => { 
-        'map'   => { description        => { value => \&string },
-                     requires_packages  => { value => \&string },
-                     requires_os        => { value => \&string },
-                     excludes_os        => { value => \&string },
-                     requires           => $module_map1,
-                     recommends         => $module_map1,
-                     build_requires     => $module_map1,
-                     conflicts          => $module_map2,
-                    ':key'  => { name => \&word, value => \&string_or_undef }, 
-    } }
+        ':key'  => { name => \&word, 
+            'map'   => { description        => { value => \&string },
+                         requires_packages  => { value => \&string },
+                         requires_os        => { value => \&string },
+                         excludes_os        => { value => \&string },
+                         requires           => $module_map1,
+                         recommends         => $module_map1,
+                         build_requires     => $module_map1,
+                         conflicts          => $module_map2,
+            }
+        }
+     }
   },
 
   'provides'    => {
@@ -361,52 +363,6 @@ sub check_list {
         }
     }
 
-#   the following is a snippet from a valid META.yml file:
-#
-#   optional_features:
-#     - foo:
-#       description:        test
-#       requires_packages:  test
-#       requires_os:        test
-#       excludes_os:        test
-#       requires:
-#         Test::More:       0.47
-#       recommends:
-#         Test::More:       0.47
-#       build_requires:
-#         Test::More:       0.47
-#       conflicts:
-#         Test::More:       0.47
-#
-#   below is the snippet of data that YAML::LoadFile will return:
-#
-#   'optional_features' => [
-#                            {
-#                              'description' => 'test',
-#                              'build_requires' => {
-#                                                    'Test::More' => '0.47'
-#                                                  },
-#                              'requires_os' => 'test',
-#                              'excludes_os' => 'test',
-#                              'requires_packages' => 'test',
-#                              'conflicts' => {
-#                                               'Test::More' => '0.47'
-#                                             },
-#                              'requires' => {
-#                                              'Test::More' => '0.47'
-#                                            },
-#                              'foo' => undef,
-#                              'recommends' => {
-#                                                'Test::More' => '0.47'
-#                                              }
-#                            }
-#                          ],
-#
-#   Note that 'foo' is inside the hash, not the first item in the list. To me
-#   this is a design flaw, as it makes no sense to me having the list 
-#   identifier as part of the hash. Plus it makes it painfully difficult to
-#   validate :(
-
     for my $value (@$data) {
         if(defined $spec->{value}) {
             $spec->{value}->($self,'list',$value);
@@ -414,6 +370,9 @@ sub check_list {
             $self->check_map($spec->{'map'},$value);
         } elsif(defined $spec->{'list'}) {
             $self->check_list($spec->{'list'},$value);
+
+        } elsif ($spec->{':key'}) {
+            $self->check_map($spec,$value);
 
         } else {
             push @{$self->{errors}}, "Unknown value type, '$value', found in list structure";
@@ -673,8 +632,9 @@ __END__
 There are no known bugs at the time of this release. However, if you spot a
 bug or are experiencing difficulties that are not explained within the POD
 documentation, please send an email to barbie@cpan.org or submit a bug to the
-RT system (http://rt.cpan.org/). However, it would help greatly if you are 
-able to pinpoint problems or even supply a patch. 
+RT system (http://rt.cpan.org/Public/Dist/Display.html?Name=Test-YAML-Meta). 
+However, it would help greatly if you are able to pinpoint problems or even 
+supply a patch. 
 
 Fixes are dependant upon their severity and my availablity. Should a fix not
 be forthcoming, please feel free to (politely) remind me.

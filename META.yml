@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:                     Test-YAML-Meta
-version:                  0.02
+version:                  0.03
 abstract:                 A test module to validate a META.yml file.
 author:
   - Barbie <barbie@cpan.org>
@@ -24,14 +24,18 @@ build_requires:
 provides:
   Test::YAML::Meta:
     file:     lib/Test/YAML/Meta.pm
-    version:  0.02
+    version:  0.03
   Test::YAML::Meta::Version:
     file:     lib/Test/YAML/Meta/Version.pm
-    version:  0.02
+    version:  0.03
 no_index:
   directory:
     - t
     - examples
+
+resources:
+  license:    http://dev.perl.org/licenses/
+  bugtracker: http://rt.cpan.org/Public/Dist/Display.html?Name=Test-YAML-Meta
 
 meta-spec:
    version:   1.3

@@ -1,5 +1,11 @@
 # Changes log for Test::YAML::Meta
 
+0.03    27/02/2007
+	- POD & comment updates
+	- removed 92distribution.t test as it can't detect that YAML::Syck is 
+	  optional
+	- fixed a misunderstanding of mine from the META.yml specification.
+
 0.02    27/02/2007
 	Fixed a bug in detecting module name
 

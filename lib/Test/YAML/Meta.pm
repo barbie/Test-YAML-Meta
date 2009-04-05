@@ -4,7 +4,7 @@ use warnings;
 use strict;
 
 use vars qw($VERSION);
-$VERSION = '0.02';
+$VERSION = '0.03';
 
 #----------------------------------------------------------------------------
 
@@ -92,7 +92,7 @@ sub import {
 
 =over
 
-=item * meta_yaml_ok($msg)
+=item * meta_yaml_ok([$msg])
 
 Basic META.yml wrapper around meta_spec_ok.
 
@@ -103,9 +103,10 @@ sub meta_yaml_ok {
     meta_spec_ok(undef,undef,@_);
 }
 
-=item * meta_spec_ok($file [,$version] [,$msg])
+=item * meta_spec_ok($file, $version [,$msg])
 
-Validates the named file against the given specification version.
+Validates the named file against the given specification version. Both $file 
+and $version can be undefined.
 
 =back
 
@@ -148,8 +149,9 @@ __END__
 There are no known bugs at the time of this release. However, if you spot a
 bug or are experiencing difficulties that are not explained within the POD
 documentation, please send an email to barbie@cpan.org or submit a bug to the
-RT system (http://rt.cpan.org/). However, it would help greatly if you are 
-able to pinpoint problems or even supply a patch. 
+RT system (http://rt.cpan.org/Public/Dist/Display.html?Name=Test-YAML-Meta). 
+However, it would help greatly if you are able to pinpoint problems or even 
+supply a patch. 
 
 Fixes are dependant upon their severity and my availablity. Should a fix not
 be forthcoming, please feel free to (politely) remind me.
