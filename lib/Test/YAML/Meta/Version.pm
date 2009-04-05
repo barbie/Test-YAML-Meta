@@ -4,7 +4,7 @@ use warnings;
 use strict;
 
 use vars qw($VERSION);
-$VERSION = '0.05';
+$VERSION = '0.06';
 
 #----------------------------------------------------------------------------
 
@@ -132,11 +132,11 @@ my %definitions = (
   'name'                => { mandatory => 1, value => \&string  },
   'version'             => { mandatory => 1, value => \&version },
   'license'             => { mandatory => 1, value => \&license },
-  'distribution_type'   => { mandatory => 1, value => \&string  },
   'generated_by'        => { mandatory => 1, value => \&string  },
   'author'              => { mandatory => 1, list => { value => \&string } },
+  'abstract'            => { mandatory => 1, value => \&string  },
 
-  'abstract'            => { value => \&string  },
+  'distribution_type'   => { value => \&string  },
   'dynamic_config'      => { value => \&boolean },
 
   'keywords'            => { list => { value => \&string } },
@@ -177,9 +177,9 @@ my %definitions = (
   'version'             => { mandatory => 1, value => \&version },
   'license'             => { mandatory => 1, value => \&license },
   'license_uri'         => { mandatory => 0, value => \&url },
-  'distribution_type'   => { mandatory => 1, value => \&string  },
   'generated_by'        => { mandatory => 1, value => \&string  },
 
+  'distribution_type'   => { value => \&string  },
   'dynamic_config'      => { value => \&boolean },
 
   'private'             => $no_index_1_1,
@@ -201,9 +201,9 @@ my %definitions = (
   'name'                => { mandatory => 1, value => \&string  },
   'version'             => { mandatory => 1, value => \&version },
   'license'             => { mandatory => 1, value => \&license },
-  'distribution_type'   => { mandatory => 1, value => \&string  },
   'generated_by'        => { mandatory => 1, value => \&string  },
 
+  'distribution_type'   => { value => \&string  },
   'dynamic_config'      => { value => \&boolean },
 
   'requires'            => $module_map1,

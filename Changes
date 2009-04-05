@@ -1,5 +1,8 @@
 # Changes log for Test::YAML::Meta
 
+0.06	05/11/2007
+	- fixed RT#29457: distribution_type is not mandatory in spec 1.2 (domm)
+
 0.05	02/11/2007
 	- a curious error report fails validating META.yml the first time, but
 	  is okay the second time. As such I'm removing the 93metavalid.t as 
