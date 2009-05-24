@@ -1,7 +1,11 @@
 # Changes log for Test::YAML::Meta
 
-0.12    current
+0.12    24/05/2009
 	- added version checking to standard 94metatest.t
+	- added changes file checking, 95changedate.t
+	- added support for v-strings (RT#43566, thanks to David Golden)
+	- relaxed resource keys names, as per spec (RT#41605, thanks to 
+	  Jonathan Yu)
 
 0.11    27/06/2008
 	- added spec version 1.4

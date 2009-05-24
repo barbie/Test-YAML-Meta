@@ -503,7 +503,7 @@ Validates a list of versions, e.g. '<= 5, >=2, ==3, !=4, >1, <6, 0'.
 =item * version($self,$key,$value)
 
 Validates a single version string. Versions of the type '5.8.8' and '0.00_00'
-are both valid.
+are both valid. A leading 'v' like 'v1.2.3' is also valid.
 
 =item * boolean($self,$key,$value)
 
@@ -629,7 +629,7 @@ sub version {
     my ($self,$key,$value) = @_;
     if(defined $value) {
         return 0    unless($value || $value =~ /0/);
-        return 1    if($value =~ /^\s*((<|<=|>=|>|!=|==)\s*)?\d+((\.\d+((_|\.)\d+)?)?)/);
+        return 1    if($value =~ /^\s*((<|<=|>=|>|!=|==)\s*)?v?\d+((\.\d+((_|\.)\d+)?)?)/);
     } else {
         $value = '<undef>';
     }
@@ -681,7 +681,9 @@ sub license {
 sub resource {
     my ($self,$key) = @_;
     if(defined $key) {
-        return 1    if($key && $key =~ /^([A-Z][a-z]+)+$/);
+        # a valid user defined key should be alphabetic 
+        # and contain at least one capital case letter.
+        return 1    if($key && $key =~ /^[a-z]+$/i && $key =~ /[A-Z]/);
     } else {
         $key = '<undef>';
     }
