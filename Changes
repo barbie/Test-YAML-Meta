@@ -3,7 +3,8 @@
 0.15    18/12/2009
 	- renamed word() to keyword().
 	- added identifier() validation.
-	- changed optional_features key from a keyword to an identifier type.
+	- changed optional_features key from a keyword to an identifier type,
+	  thus further clarifying RT#52685 (thanks Kevin).
 
 0.14    12/12/2009
 	- clarified spec defined and user defined keys, as promoted by Kevin
