@@ -1,5 +1,8 @@
 # Changes log for Test::YAML::Meta
 
+0.18    14/02/2011
+	- removed tests which are no longer applicable.
+
 0.17    13/02/2011
         - Distribution name chang: Test-YAML-Meta => Test-CPAN-Meta-YAML.
 	- This distribution now a wrapper around Test-CPAN-Meta-YAML.
