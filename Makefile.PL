@@ -3,9 +3,10 @@ WriteMakefile(
     'NAME'			=> 'Test::YAML::Meta',
     'VERSION_FROM'	=> 'lib/Test/YAML/Meta.pm',
     'PREREQ_PM'		=> {
-		Test::Builder       => 0,
-		Test::YAML::Valid	=> 0.03,
-		Test::More	        => 0.70,	# for testing
+        Test::CPAN::Meta::YAML  => 0.17,
+		Test::Builder           => 0,
+		Test::YAML::Valid	    => 0.03,
+		Test::More	            => 0.70,	# for testing
 	},
 	NO_META			=> 1,
 

@@ -1,5 +1,8 @@
 # Changes log for Test::YAML::Meta
 
+0.19    15/02/2011
+	- added missing prerequisite.
+
 0.18    14/02/2011
 	- removed tests which are no longer applicable.
 

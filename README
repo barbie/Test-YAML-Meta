@@ -79,11 +79,7 @@ for Miss Barbell Productions http://www.missbarbell.co.uk.
 
 COPYRIGHT AND LICENSE
 
-  Copyright (C) 2007 Barbie for Miss Barbell Productions.
+  Copyright (C) 2007-2011 Barbie for Miss Barbell Productions
 
-  This module is free software; you can redistribute it and/or 
-  modify it under the same terms as Perl itself.
-
-The full text of the licenses can be found in the Artistic file included with
-this distribution, or in perlartistic file available with your Perl 
-installation.
+  This module is free software; you can redistribute it and/or
+  modify it under the Artistic Licence v2.
