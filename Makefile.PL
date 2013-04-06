@@ -1,16 +1,27 @@
-use ExtUtils::MakeMaker;
-WriteMakefile(
-    'NAME'			=> 'Test::YAML::Meta',
-    'VERSION_FROM'	=> 'lib/Test/YAML/Meta.pm',
-    'PREREQ_PM'		=> {
-        Test::CPAN::Meta::YAML  => 0.17,
-		Test::Builder           => 0,
-		Test::YAML::Valid	    => 0.03,
-		Test::More	            => 0.70,	# for testing
-	},
-	NO_META			=> 1,
+#!/usr/bin/perl
 
-    ($] >= 5.005 ?    ## Add these new keywords supported since 5.005
-      (ABSTRACT	=> 'META.yml testing module',
-       AUTHOR	=> 'Barbie <barbie@cpan.org>') : ()),
+use strict;
+use warnings;
+use 5.006;
+
+use ExtUtils::MakeMaker;
+
+WriteMakefile(
+    AUTHOR              => 'Barbie <barbie@cpan.org>',
+    NAME                => 'Test::YAML::Meta',
+    VERSION_FROM        => 'lib/Test/YAML/Meta.pm',
+    ABSTRACT            => 'A test module to validate a CPAN META.yml file',
+    NO_META             => 1,
+    PREREQ_PM => {
+
+        # prereqs
+		'Test::Builder'             => 0,
+        'Test::CPAN::Meta::YAML'    => 0.17,
+		'Test::YAML::Valid'	        => 0.03,
+
+        # for testing
+        'IO::File'                  => 0,       # for testing
+        'Test::More'                => 0.70     # for testing
+
+    },
 );

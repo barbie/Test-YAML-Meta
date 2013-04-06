@@ -1,22 +1,26 @@
 --- #YAML:1.0
 name:                     Test-YAML-Meta
 version:                  0.19
-abstract:                 A test module to validate a META.yml file.
+abstract:                 A test module to validate a CPAN META.yml file
 author:
   - Barbie <barbie@cpan.org>
 
-license:                  perl
+license:                  artistic_2
 distribution_type:        module
 installdirs:              site
 
 requires:
+  perl:                   5.006
+  Test::Builder:          0
   Test::CPAN::Meta::YAML: 0.17
-  Test::More:             0.70
+  Test::YAML::Valid:      0.03
 recommends:
-  Test::More:             0.70
+  Test::CPAN::Meta:       0
+  Test::CPAN::Meta::JSON: 0
   Test::Pod:              1.00
   Test::Pod::Coverage:    0.08
 build_requires:
+  IO::File:               0
   Test::More:             0.70
 
 provides:
@@ -29,8 +33,9 @@ no_index:
     - examples
 
 resources:
-  license:    http://dev.perl.org/licenses/
+  license:    http://www.perlfoundation.org/artistic_license_2_0
   bugtracker: http://rt.cpan.org/Public/Dist/Display.html?Name=Test-YAML-Meta
+  repository: http://github.com/barbie/Test-YAML-Meta
 
 meta-spec:
    version:   1.4
