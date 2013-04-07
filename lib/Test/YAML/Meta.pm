@@ -4,7 +4,7 @@ use warnings;
 use strict;
 
 use vars qw($VERSION);
-$VERSION = '0.19';
+$VERSION = '0.20';
 
 use base 'Test::CPAN::Meta::YAML';
 

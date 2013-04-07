@@ -1,5 +1,6 @@
 # Changes log for Test-YAML-Meta
 
+0.20    2013-04-07
         - change file dates changed to meet W3CDTF standards.
         - reworked Makefile.PL for clarity.
         - upgraded to Test::CPAN::Meta::JSON for tests.
