@@ -16,7 +16,7 @@ __END__
 
 =head1 NAME
 
-Test::YAML::Meta - Validation of the META.yml file in a distribution.
+Test::YAML::Meta - Validate your CPAN META.yml files.
 
 =head1 DESCRIPTION
 

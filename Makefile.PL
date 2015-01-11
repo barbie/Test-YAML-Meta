@@ -10,7 +10,7 @@ WriteMakefile(
     AUTHOR              => 'Barbie <barbie@cpan.org>',
     NAME                => 'Test::YAML::Meta',
     VERSION_FROM        => 'lib/Test/YAML/Meta.pm',
-    ABSTRACT            => 'A test module to validate a CPAN META.yml file',
+    ABSTRACT            => 'Validate your CPAN META.yml files',
     NO_META             => 1,
     PREREQ_PM => {
 
