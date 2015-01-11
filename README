@@ -1,6 +1,15 @@
 Test-YAML-Meta
 ==============
 
+NOTICE
+
+Please note that this distribution has now been replaced by Test-CPAN-Meta-YAML.
+
+WARNING
+
+This distribution will be retired at the end of 2015. Please replace your 
+references to this module with L<Test::CPAN::Meta::YAML>.
+
 DESCRIPTION
 
 Validation of the META.yml file in a distribution.
@@ -15,6 +24,9 @@ which forms the basis for the contents of a META.json file. The full
 specification is now included with the CPAN-Meta distribution.
 
 http://search.cpan.org/perldoc?CPAN::Meta
+
+Note that v2.0 of the current specification, requires JSON as the Metadata
+file format. As such, this distribution only supports up to v1.4.
 
 DEPENDENCIES
 
