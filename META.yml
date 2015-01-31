@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:                     Test-YAML-Meta
-version:                  0.21
+version:                  0.22
 abstract:                 Validate your CPAN META.yml files
 author:
   - Barbie <barbie@cpan.org>
@@ -26,7 +26,7 @@ build_requires:
 provides:
   Test::YAML::Meta:
     file:     lib/Test/YAML/Meta.pm
-    version:  0.21
+    version:  0.22
 no_index:
   directory:
     - t
